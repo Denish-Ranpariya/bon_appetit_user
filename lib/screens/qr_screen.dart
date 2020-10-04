@@ -1,6 +1,9 @@
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:barcode_scan/platform_wrapper.dart';
+import 'package:bon_appetit_user/screens/menu_screen.dart';
+import 'package:bon_appetit_user/shared/loading.dart';
+import 'package:bon_appetit_user/widgets/bottom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QrScreen extends StatefulWidget {
   @override
@@ -9,67 +12,101 @@ class QrScreen extends StatefulWidget {
 
 class _QrScreenState extends State<QrScreen> {
   String qrCodeResult = "Not Yet Scanned";
-
-  Future<ScanResult> scanQrCode() async {
-    ScanResult codeScanner = await BarcodeScanner.scan();
-    return codeScanner;
-  }
+  bool isLoading = false;
+  bool _disposed = false;
 
   @override
-  void initState() async {
-    // TODO: implement initState
-    super.initState();
-    await scanQrCode();
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Scanner"),
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text(
-              "Result",
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              qrCodeResult,
-              style: TextStyle(
-                fontSize: 20.0,
+    return isLoading
+        ? Loading()
+        : Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(height: 110),
+                  Expanded(
+                    flex: 1,
+                    child: Image.asset(
+                      'images/soup.png',
+                      height: 200,
+                      width: 200,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Bon Appetit',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.patuaOne(
+                        fontSize: 40,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  BottomButton(
+                    buttonText: 'Scan',
+                    onPressed: () async {
+                      try {
+                        ScanResult codeScanner = await BarcodeScanner.scan();
+                        setState(() {
+                          qrCodeResult = codeScanner.toString();
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuScreen(
+                              restaurantId: qrCodeResult,
+                            ),
+                          ),
+                        );
+
+                        if (!_disposed) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                  ),
+                ],
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            FlatButton(
-              padding: EdgeInsets.all(15.0),
-              onPressed: () async {
-                ScanResult codeScanner = await BarcodeScanner.scan();
-                setState(() {
-                  qrCodeResult = codeScanner.rawContent;
-                });
-              },
-              child: Text(
-                "Open Scanner",
-                style:
-                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-              ),
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.blue, width: 3.0),
-                  borderRadius: BorderRadius.circular(20.0)),
-            )
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
+
+// () async {
+// try {
+// String codeScanner = await BarcodeScanner.scan();
+// setState(() {
+// qrCodeResult = codeScanner;
+// });
+// Navigator.push(
+// context,
+// MaterialPageRoute(
+// builder: (context) => MenuScreen(
+// restaurantId: qrCodeResult,
+// ),
+// ),
+// );
+//
+// if (!_disposed) {
+// setState(() {
+// isLoading = false;
+// });
+// }
+// } catch (e) {
+// print(e);
+// }
+// },
