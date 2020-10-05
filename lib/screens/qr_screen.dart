@@ -1,8 +1,11 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:bon_appetit_user/screens/menu_screen.dart';
 import 'package:bon_appetit_user/services/auth_service.dart';
+import 'package:bon_appetit_user/services/connectivity_service.dart';
 import 'package:bon_appetit_user/shared/loading.dart';
+import 'package:bon_appetit_user/shared/toast.dart';
 import 'package:bon_appetit_user/widgets/bottom_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,25 +65,36 @@ class _QrScreenState extends State<QrScreen> {
                         setState(() {
                           qrCodeResult = codeScanner.rawContent;
                         });
-                        if (qrCodeResult != '') {
-                          print(qrCodeResult);
-                          setState(() {
-                            isLoading = true;
-                          });
-                          FirebaseUser user = await AuthService().signInAnon();
-                          print(user.uid);
-                          setState(() {
-                            isLoading = false;
-                          });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MenuScreen(
-                                restaurantId: qrCodeResult,
-                              ),
-                            ),
-                          );
+                        bool result =
+                            await ConnectivityService.getConnectivityStatus();
+                        if (result) {
+                          if (qrCodeResult != '') {
+                            if (qrCodeResult.endsWith('food') &&
+                                qrCodeResult.length == 32) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              FirebaseUser user =
+                                  await AuthService().signInAnon();
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuScreen(
+                                    restaurantId: qrCodeResult,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ToastClass.buildShowToast('Invalid QR code');
+                            }
+                          }
+                        } else {
+                          ToastClass.buildShowToast('no internet connection');
                         }
+
                         if (!_disposed) {
                           setState(() {
                             isLoading = false;
