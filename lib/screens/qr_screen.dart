@@ -1,7 +1,9 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:bon_appetit_user/screens/menu_screen.dart';
+import 'package:bon_appetit_user/services/auth_service.dart';
 import 'package:bon_appetit_user/shared/loading.dart';
 import 'package:bon_appetit_user/widgets/bottom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,7 +13,7 @@ class QrScreen extends StatefulWidget {
 }
 
 class _QrScreenState extends State<QrScreen> {
-  String qrCodeResult = "Not Yet Scanned";
+  String qrCodeResult = '';
   bool isLoading = false;
   bool _disposed = false;
 
@@ -58,17 +60,27 @@ class _QrScreenState extends State<QrScreen> {
                       try {
                         ScanResult codeScanner = await BarcodeScanner.scan();
                         setState(() {
-                          qrCodeResult = codeScanner.toString();
+                          qrCodeResult = codeScanner.rawContent;
                         });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MenuScreen(
-                              restaurantId: qrCodeResult,
+                        if (qrCodeResult != '') {
+                          print(qrCodeResult);
+                          setState(() {
+                            isLoading = true;
+                          });
+                          FirebaseUser user = await AuthService().signInAnon();
+                          print(user.uid);
+                          setState(() {
+                            isLoading = false;
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MenuScreen(
+                                restaurantId: qrCodeResult,
+                              ),
                             ),
-                          ),
-                        );
-
+                          );
+                        }
                         if (!_disposed) {
                           setState(() {
                             isLoading = false;
@@ -85,28 +97,3 @@ class _QrScreenState extends State<QrScreen> {
           );
   }
 }
-
-// () async {
-// try {
-// String codeScanner = await BarcodeScanner.scan();
-// setState(() {
-// qrCodeResult = codeScanner;
-// });
-// Navigator.push(
-// context,
-// MaterialPageRoute(
-// builder: (context) => MenuScreen(
-// restaurantId: qrCodeResult,
-// ),
-// ),
-// );
-//
-// if (!_disposed) {
-// setState(() {
-// isLoading = false;
-// });
-// }
-// } catch (e) {
-// print(e);
-// }
-// },
