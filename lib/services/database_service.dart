@@ -1,6 +1,9 @@
 import 'package:bon_appetit_user/models/food_item.dart';
 import 'package:bon_appetit_user/models/restaurant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:random_string/random_string.dart';
 
 class DatabaseService {
   String id;
@@ -39,5 +42,17 @@ class DatabaseService {
     return Restaurant(
         restaurantName: snapshot.get('restaurant_name'),
         restaurantPhoneNumber: snapshot.get('phone_number'));
+  }
+
+  Future placeOrder(Map<FoodItem, int> cart) async {
+    String orderId = randomAlphaNumeric(22);
+
+    cart.forEach((key, value) async {
+      return await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid + 'order').doc(orderId).collection(orderId).doc().set({
+        'fooditem_name' : key.foodItemName,
+        'fooditem_price' : key.foodItemPrice,
+        'fooditem_quantity' : value,
+      });
+    });
   }
 }

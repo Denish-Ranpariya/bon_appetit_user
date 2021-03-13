@@ -44,7 +44,7 @@ dependencies:
       ref: v0.1.7
   google_sign_in: ^5.0.0
   flutter_svg: ^0.19.3
-
+  random_string: ^2.1.0
 
 dev_dependencies:
   flutter_test:
