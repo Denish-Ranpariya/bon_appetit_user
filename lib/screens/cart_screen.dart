@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class CartScreen extends StatefulWidget {
   final Map<FoodItem, int> cart;
+  final String restaurantId;
 
-  CartScreen({this.cart});
+  CartScreen({this.cart, this.restaurantId});
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -38,7 +39,7 @@ class _CartScreenState extends State<CartScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          await DatabaseService().placeOrder(widget.cart);
+          await DatabaseService().placeOrder(widget.cart,widget.restaurantId);
           setState(() {
             widget.cart.clear();
           });

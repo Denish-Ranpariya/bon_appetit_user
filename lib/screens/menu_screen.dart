@@ -50,7 +50,7 @@ class _MenuScreenState extends State<MenuScreen> {
             cart.removeWhere((key, value) => value == 0 );
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CartScreen(cart: cart)),
+              MaterialPageRoute(builder: (context) => CartScreen(cart: cart, restaurantId: widget.restaurantId)),
             );
           },
           tooltip: 'Cart',
