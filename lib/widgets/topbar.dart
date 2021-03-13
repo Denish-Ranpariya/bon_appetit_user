@@ -1,3 +1,5 @@
+import 'package:bon_appetit_user/services/auth_service.dart';
+import 'package:bon_appetit_user/shared/toast.dart';
 import 'package:flutter/material.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
@@ -21,13 +23,29 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(color: Colors.grey[800]),
       ),
       actions: <Widget>[
-        FlatButton.icon(
+        TextButton.icon(
           label: Text(iconTitle),
           icon: Icon(
             iconData,
             color: Colors.grey[800],
           ),
           onPressed: onPressed,
+        ),
+        TextButton.icon(
+          label: Text('Logout'),
+          icon: Icon(
+            Icons.person,
+            color: Colors.grey[800],
+          ),
+          onPressed: () async {
+            try {
+              Navigator.pop(context);
+              await AuthService().logout();
+              ToastClass.buildShowToast('Logged out');
+            } catch (e) {
+              print(e.toString());
+            }
+          },
         ),
       ],
     );

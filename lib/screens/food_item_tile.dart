@@ -15,9 +15,16 @@ class FoodItemTile extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              radius: 6.0,
+              radius: 32,
               backgroundColor:
                   foodItem.foodItemType == 'nonveg' ? Colors.red : Colors.green,
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.transparent,
+                backgroundImage: foodItem.foodItemImageUrl == ''
+                    ? AssetImage('images/default.jpeg')
+                    : NetworkImage(foodItem.foodItemImageUrl),
+              ),
             ),
             SizedBox(
               width: 10.0,

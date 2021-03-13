@@ -1,6 +1,8 @@
 import 'package:bon_appetit_user/screens/qr_screen.dart';
 import 'package:bon_appetit_user/widgets/alert_dialog_box.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'login_screen.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -19,6 +21,17 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: onPressedBack, child: QrScreen());
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot){
+        User user = snapshot.data;
+        if (user != null) {
+          return WillPopScope(onWillPop: onPressedBack, child: QrScreen());
+        } else {
+          return WillPopScope(onWillPop: onPressedBack, child: LoginScreen());
+        }
+      },
+    );
+
   }
 }
