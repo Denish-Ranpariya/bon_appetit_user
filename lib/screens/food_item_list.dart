@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'food_item_tile.dart';
 
 class FoodItemList extends StatefulWidget {
+  final Map<FoodItem, int> cart;
+  FoodItemList({this.cart});
+
   @override
   _FoodItemListState createState() => _FoodItemListState();
 }
@@ -40,11 +43,11 @@ class _FoodItemListState extends State<FoodItemList> {
                 indent: 25,
                 endIndent: 25,
               ),
-              FoodItemTile(foodItem: foodItems[index])
+              FoodItemTile(foodItem: foodItems[index], cart : widget.cart)
             ],
           );
         } else {
-          return FoodItemTile(foodItem: foodItems[index]);
+          return FoodItemTile(foodItem: foodItems[index], cart : widget.cart);
         }
       },
     );

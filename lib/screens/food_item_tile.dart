@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class FoodItemTile extends StatefulWidget {
   final FoodItem foodItem;
-  FoodItemTile({this.foodItem});
+  final Map<FoodItem, int> cart;
+  FoodItemTile({this.foodItem, this.cart});
   @override
   _FoodItemTileState createState() => _FoodItemTileState();
 }
 
 class _FoodItemTileState extends State<FoodItemTile> {
-  int count = 0;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,8 +24,9 @@ class _FoodItemTileState extends State<FoodItemTile> {
               children: [
                 CircleAvatar(
                   radius: 32,
-                  backgroundColor:
-                  widget.foodItem.foodItemType == 'nonveg' ? Colors.red : Colors.green,
+                  backgroundColor: widget.foodItem.foodItemType == 'nonveg'
+                      ? Colors.red
+                      : Colors.green,
                   child: CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.transparent,
@@ -46,9 +47,13 @@ class _FoodItemTileState extends State<FoodItemTile> {
                 Spacer(),
                 GestureDetector(
                   onTap: () {
-                    // count == 0 ? count = 0 : count--;
                     setState(() {
-                      count = count == 0 ? 0 : count-1;
+                      if (widget.cart.containsKey(widget.foodItem)) {
+                        if (widget.cart[widget.foodItem] > 0) {
+                          widget.cart[widget.foodItem] = widget.cart[widget.foodItem] - 1;
+                          // print(widget.cart[widget.foodItem]);
+                        }
+                      }
                     });
                   },
                   child: Text(
@@ -58,18 +63,30 @@ class _FoodItemTileState extends State<FoodItemTile> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10.0,),
+                SizedBox(
+                  width: 10.0,
+                ),
                 Text(
-                  count.toString(),
+                  widget.cart.containsKey(widget.foodItem)
+                      ? widget.cart[widget.foodItem].toString()
+                      : '0',
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
                 ),
-                SizedBox(width: 10.0,),
+                SizedBox(
+                  width: 10.0,
+                ),
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      count++;
+                      if (!widget.cart.containsKey(widget.foodItem)) {
+                        // print(widget.cart[widget.foodItem]);
+                        widget.cart[widget.foodItem] = 1;
+                      } else {
+                        // print(widget.cart[widget.foodItem]);
+                        widget.cart[widget.foodItem] = widget.cart[widget.foodItem] + 1;
+                      }
                     });
                   },
                   child: Text(
@@ -79,7 +96,9 @@ class _FoodItemTileState extends State<FoodItemTile> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10.0,),
+                SizedBox(
+                  width: 10.0,
+                ),
               ],
             ),
           ),

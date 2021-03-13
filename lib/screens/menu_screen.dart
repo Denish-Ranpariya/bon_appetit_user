@@ -1,4 +1,5 @@
 import 'package:bon_appetit_user/models/food_item.dart';
+import 'package:bon_appetit_user/screens/cart_screen.dart';
 import 'package:bon_appetit_user/screens/qr_viewer.dart';
 import 'package:bon_appetit_user/services/database_service.dart';
 import 'package:bon_appetit_user/shared/constants.dart';
@@ -20,6 +21,9 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
+
+    Map<FoodItem,int> cart = {};
+
     return StreamProvider<List<FoodItem>>.value(
       value: DatabaseService(id: widget.restaurantId).foodItems,
       initialData: [],
@@ -38,6 +42,18 @@ class _MenuScreenState extends State<MenuScreen> {
               print(e);
             }
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.teal,
+          onPressed: (){
+            cart.removeWhere((key, value) => value == 0 );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CartScreen(cart: cart)),
+            );
+          },
+          tooltip: 'Cart',
+          child: Icon(Icons.shopping_bag_outlined),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -95,7 +111,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
             Expanded(
-              child: FoodItemList(),
+              child: FoodItemList(cart: cart),
             ),
           ],
         ),
