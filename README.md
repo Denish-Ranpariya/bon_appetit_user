@@ -1,16 +1,26 @@
-# bon_appetit_user
+# Bon Appeit
 
-Application for customers
+## Definition:
+Bon Appetit is a mobile application which allows user to upload restaurant menus and also modify details about various food items and categories. Customer can get the menu by scanning QR code on this mobile app.
 
-## Getting Started
+## Current system:
+* Current restaurant management system are using physical menus.
+* In the current system there is a risk of transmission of viruses in this pandemic situation.
+* If the restaurant wants to change the details about the food items, then the management have to change and print the whole menu for the few changes.
 
-This project is a starting point for a Flutter application.
+## Proposed System:
+* In our application there is no need of physical menu if you are using a smartphone.
+* By using the app we can prevent the physical touch to the menu and spread of the viruses.
+* If the restaurant management wants to change or modify the menu, then they only have to change in the app.
+* This app can be used at any small or big restaurants.
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies:
+* Flutter 
+* Adobe XD 
+* Firebase 
+* Firebase Firestore
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## About Team Members
+* *Denish Ranpariya* &nbsp; &nbsp;[Resume](https://drive.google.com/file/d/1PZHVHJ8iY283uirxJljFNpCXV4o_U0HJ/view?usp=sharing) &nbsp; &nbsp; [GitHub](https://github.com/Denish-Ranpariya) &nbsp; &nbsp; [LinkedIn](https://www.linkedin.com/in/denish-ranpariya-428478167/)
+* *Manoj Padia* &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;[Resume](https://drive.google.com/file/d/1ycCm70dlmqcwRu7jQRKw6QUSE3ZF23j9/view?usp=drivesdk) &nbsp;&nbsp; &nbsp;[GitHub](https://github.com/ManojPadia) &nbsp;&nbsp; &nbsp; [LinkedIn](https://www.linkedin.com/in/manoj-padiya-9724451a2/)
+* *Jeet Vadera* &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;[Resume](https://drive.google.com/file/d/1ftxNVrdULAWPE_Y6f7EJiMUxoK2_BPxJ/view?usp=sharing)  &nbsp; &nbsp; [GitHub](https://github.com/vadera11jeet)&nbsp; &nbsp;&nbsp; [LinkedIn](https://www.linkedin.com/in/jeet-vadera-3bb1a91a0/)
