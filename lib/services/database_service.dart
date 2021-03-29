@@ -46,7 +46,10 @@ class DatabaseService {
 
   Future placeOrder(Map<FoodItem, int> cart, String restaurantId) async {
     String orderId = randomAlphaNumeric(22);
+    String name = FirebaseAuth.instance.currentUser.displayName;
 
+    await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid + 'order').doc(orderId).set(
+        {'name':name});
     cart.forEach((key, value) async {
       return await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid + 'order').doc(orderId).collection(orderId).doc().set({
         'fooditem_name' : key.foodItemName,
@@ -55,6 +58,8 @@ class DatabaseService {
       });
     });
 
+    await FirebaseFirestore.instance.collection(restaurantId.substring(0, restaurantId.length - 4) + 'pendingorders').doc(orderId).set(
+        {'name':name});
     cart.forEach((key, value) async {
       return await FirebaseFirestore.instance.collection(restaurantId.substring(0, restaurantId.length - 4) + 'pendingorders').doc(orderId).collection(orderId).doc().set({
         'fooditem_name' : key.foodItemName,
