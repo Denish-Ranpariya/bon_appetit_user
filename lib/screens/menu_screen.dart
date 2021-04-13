@@ -1,11 +1,11 @@
 import 'package:bon_appetit_user/models/food_item.dart';
 import 'package:bon_appetit_user/screens/cart_screen.dart';
-import 'package:bon_appetit_user/screens/qr_viewer.dart';
 import 'package:bon_appetit_user/services/database_service.dart';
 import 'package:bon_appetit_user/shared/constants.dart';
+import 'package:bon_appetit_user/widgets/side_drawer.dart';
 import 'package:bon_appetit_user/widgets/topbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'food_item_list.dart';
@@ -30,19 +30,10 @@ class _MenuScreenState extends State<MenuScreen> {
       initialData: [],
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: TopBar(
-          iconData: FontAwesomeIcons.qrcode,
-          iconTitle: 'Scan',
-          onPressed: () async {
-            try {
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                return QRViewer();
-              }));
-            } catch (e) {
-              print(e);
-            }
-          },
+        appBar: TopBar(),
+        drawer: Container(
+          width: MediaQuery.of(context).size.width * 0.60,
+          child: SideDrawer(),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.teal,

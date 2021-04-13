@@ -3,11 +3,6 @@ import 'package:bon_appetit_user/shared/toast.dart';
 import 'package:flutter/material.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
-  final IconData iconData;
-  final String iconTitle;
-  final Function onPressed;
-
-  TopBar({this.iconData, this.iconTitle = '', this.onPressed});
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -23,14 +18,6 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(color: Colors.grey[800]),
       ),
       actions: <Widget>[
-        TextButton.icon(
-          label: Text(iconTitle),
-          icon: Icon(
-            iconData,
-            color: Colors.grey[800],
-          ),
-          onPressed: onPressed,
-        ),
         TextButton.icon(
           label: Text('Logout'),
           icon: Icon(

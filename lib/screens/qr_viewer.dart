@@ -1,5 +1,6 @@
 import 'package:animated_qr_code_scanner/AnimatedQRViewController.dart';
 import 'package:animated_qr_code_scanner/animated_qr_code_scanner.dart';
+import 'package:bon_appetit_user/screens/qr_screen.dart';
 import 'package:bon_appetit_user/services/connectivity_service.dart';
 import 'package:bon_appetit_user/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -25,71 +26,78 @@ class _QRViewerState extends State<QRViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading? Loading() : Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 12,
-            child: AnimatedQRView(
-              squareColor: Colors.green.withOpacity(0.25),
-              animationDuration: const Duration(milliseconds: 400),
-              onScan: (String str) async {
-                try {
-                  bool result =
-                  await ConnectivityService.getConnectivityStatus();
-                  if (result) {
-                    if (str != '') {
-                      if (str.endsWith('food') &&
-                          str.length == 32) {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MenuScreen(
-                              restaurantId: str,
-                            ),
-                          ),
-                        );
-                      } else {
-                        ToastClass.buildShowToast('Invalid QR code');
-                      }
-                    }
-                  } else {
-                    ToastClass.buildShowToast('no internet connection');
-                  }
+    return isLoading
+        ? Loading()
+        : Scaffold(
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 12,
+                  child: AnimatedQRView(
+                    squareColor: Colors.green.withOpacity(0.25),
+                    animationDuration: const Duration(milliseconds: 400),
+                    onScan: (String str) async {
+                      try {
+                        bool result =
+                            await ConnectivityService.getConnectivityStatus();
+                        if (result) {
+                          if (str != '') {
+                            if (str.endsWith('food') && str.length == 32) {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuScreen(
+                                    restaurantId: str,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ToastClass.buildShowToast('Invalid QR code');
+                            }
+                          }
+                        } else {
+                          ToastClass.buildShowToast('no internet connection');
+                        }
 
-                  if (!_disposed) {
-                    setState(() {
-                      isLoading = false;
-                    });
-                  }
-                } catch (e) {
-                  print(e);
-                }
-              },
-              controller: controller,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            // ignore: deprecated_member_use
-            child: FlatButton(
-              color: Colors.pink[400],
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
+                        if (!_disposed) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    controller: controller,
+                  ),
                 ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+                Expanded(
+                  flex: 1,
+                  // ignore: deprecated_member_use
+                  child: FlatButton(
+                    color: Colors.pink[400],
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QrScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

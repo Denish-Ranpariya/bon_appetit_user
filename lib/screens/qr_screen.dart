@@ -45,45 +45,11 @@ class _QrScreenState extends State<QrScreen> {
                   BottomButton(
                     buttonText: 'Scan',
                     onPressed: () async {
+                      Navigator.pop(context);
                       Navigator.push(context, MaterialPageRoute(
                           builder: (BuildContext context){
                             return QRViewer();
                           }));
-                      // try {
-                      //   ScanResult codeScanner = await BarcodeScanner.scan();
-                      //   setState(() {
-                      //     qrCodeResult = codeScanner.rawContent;
-                      //   });
-                      //   bool result =
-                      //       await ConnectivityService.getConnectivityStatus();
-                      //   if (result) {
-                      //     if (qrCodeResult != '') {
-                      //       if (qrCodeResult.endsWith('food') &&
-                      //           qrCodeResult.length == 32) {
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //             builder: (context) => MenuScreen(
-                      //               restaurantId: qrCodeResult,
-                      //             ),
-                      //           ),
-                      //         );
-                      //       } else {
-                      //         ToastClass.buildShowToast('Invalid QR code');
-                      //       }
-                      //     }
-                      //   } else {
-                      //     ToastClass.buildShowToast('no internet connection');
-                      //   }
-                      //
-                      //   if (!_disposed) {
-                      //     setState(() {
-                      //       isLoading = false;
-                      //     });
-                      //   }
-                      // } catch (e) {
-                      //   print(e);
-                      // }
                     },
                   ),
                 ],

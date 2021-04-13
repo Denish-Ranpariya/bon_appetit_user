@@ -1,3 +1,4 @@
+import 'package:bon_appetit_user/models/Order.dart';
 import 'package:bon_appetit_user/models/food_item.dart';
 import 'package:bon_appetit_user/models/restaurant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,24 +49,61 @@ class DatabaseService {
     String orderId = randomAlphaNumeric(22);
     String name = FirebaseAuth.instance.currentUser.displayName;
 
-    await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid + 'order').doc(orderId).set(
-        {'name':name});
+    await FirebaseFirestore.instance
+        .collection(FirebaseAuth.instance.currentUser.uid + 'order')
+        .doc(orderId)
+        .set({
+          'name': name,
+          'order_id': orderId,
+        });
     cart.forEach((key, value) async {
-      return await FirebaseFirestore.instance.collection(FirebaseAuth.instance.currentUser.uid + 'order').doc(orderId).collection(orderId).doc().set({
-        'fooditem_name' : key.foodItemName,
-        'fooditem_price' : key.foodItemPrice,
-        'fooditem_quantity' : value,
+      return await FirebaseFirestore.instance
+          .collection(FirebaseAuth.instance.currentUser.uid + 'order')
+          .doc(orderId)
+          .collection("ordered_fooditems_collection")
+          .doc()
+          .set({
+        'fooditem_name': key.foodItemName,
+        'fooditem_price': key.foodItemPrice,
+        'fooditem_quantity': value,
       });
     });
 
-    await FirebaseFirestore.instance.collection(restaurantId.substring(0, restaurantId.length - 4) + 'pendingorders').doc(orderId).set(
-        {'name':name});
+    await FirebaseFirestore.instance
+        .collection(restaurantId.substring(0, restaurantId.length - 4) +
+            'pendingorders')
+        .doc(orderId)
+        .set({
+          'name': name,
+          'order_id': orderId,
+        });
     cart.forEach((key, value) async {
-      return await FirebaseFirestore.instance.collection(restaurantId.substring(0, restaurantId.length - 4) + 'pendingorders').doc(orderId).collection(orderId).doc().set({
-        'fooditem_name' : key.foodItemName,
-        'fooditem_price' : key.foodItemPrice,
-        'fooditem_quantity' : value,
+      return await FirebaseFirestore.instance
+          .collection(restaurantId.substring(0, restaurantId.length - 4) +
+              'pendingorders')
+          .doc(orderId)
+          .collection("ordered_fooditems_collection")
+          .doc()
+          .set({
+        'fooditem_name': key.foodItemName,
+        'fooditem_price': key.foodItemPrice,
+        'fooditem_quantity': value,
       });
     });
+  }
+
+  Stream<List<Order>> get getPendingOrdersList  {
+    String collectionPath = id + "order";
+    final CollectionReference collectionReference = FirebaseFirestore.instance.collection(collectionPath);
+    return collectionReference.snapshots().map(_orderList);
+  }
+
+  List<Order> _orderList(QuerySnapshot querySnapshot)  {
+    return querySnapshot.docs.map((document){
+      return Order(
+        name: document.get('name'),
+        orderId: document.get('order_id'),
+      );
+    }).toList();
   }
 }
